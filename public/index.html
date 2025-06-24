@@ -1,11 +1,348 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>redacted</title>
 </head>
+
+
+<style>
+    html {
+        height: 100%;
+    }
+
+    body {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+    }
+
+    .grid-container {
+        display: grid;
+        height: 100%;
+        width: 100%;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+    }
+
+    .chartfield {
+        box-sizing: border-box;
+        height: 100%;
+        background-color: blanchedalmond;
+        border: 2px solid black;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .tooltip {
+        background-color: rgba(255, 255, 255, 0.112);
+        backdrop-filter: blur(3px);
+        height: 100%;
+        width: 99.8%;
+        left: 0.1%;
+        position: absolute;
+        top: 100%;
+        z-index: 1000;
+
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+        word-wrap: break-word;
+        white-space: normal;
+        box-sizing: border-box;
+        padding-right: 20px;
+        padding-left: 20px;
+        padding-top: 10px;
+    }
+
+    .tooltipButton {
+        border-radius: 40px;
+        border: dashed 2px black;
+        width: 40px;
+        height: 40px;
+        position: absolute;
+        text-align: center;
+        line-height: 40px;
+        font-size: 25px;
+        right: 20px;
+        top: 20px;
+        user-select: none;
+
+    }
+
+    .initButton {
+        position: relative;
+        border-radius: 20px;
+        border: black 3px solid;
+        height: 50px;
+        width: 50px;
+        line-height: 50px;
+        text-align: center;
+        font-size: 40px;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+
+        left: calc(50% - 25px);
+        top: calc(50% - 25px);
+        user-select: none;
+    }
+
+    .initButton:hover {
+        cursor: pointer;
+    }
+
+    .tooltipButton:hover {
+        cursor: pointer;
+    }
+</style>
+
 <body>
-    
+
+
+    <div class="topfield">
+
+    </div>
+
+    <div class="grid-container">
+        <div class="chartfield" id="field1">
+            <div class="chart" chartType="none" id="chart1">
+
+            </div>
+            <div locked="false" class="tooltip" id="field1_tooltip">
+            </div>
+            <div class="tooltipButton" onmouseenter="loadTooltip(this)" onmouseleave="unloadTooltip(this)"
+                onmousedown="handleLock(this)">
+                ?
+            </div>
+            <div class="initButton" onmousedown="loadChart(this.parentElement)">+</div>
+        </div>
+
+
+        <div class="chartfield" id="field2">
+            <div class="chart" chartType="none" id="chart2">
+
+            </div>
+            <div locked="false" class="tooltip" id="field2_tooltip">
+            </div>
+            <div class="tooltipButton" onmouseenter="loadTooltip(this)" onmouseleave="unloadTooltip(this)"
+                onmousedown="handleLock(this)">
+                ?
+            </div>
+            <div class="initButton" onmousedown="loadChart(this.parentElement)">+</div>
+        </div>
+
+
+        <div class="chartfield" id="field3">
+            <div class="chart" chartType="none" id="chart3">
+
+            </div>
+            <div locked="false" class="tooltip" id="field3_tooltip">
+            </div>
+            <div class="tooltipButton" onmouseenter="loadTooltip(this)" onmouseleave="unloadTooltip(this)"
+                onmousedown="handleLock(this)">
+                ?
+            </div>
+            <div class="initButton" onmousedown="loadChart(this.parentElement)">+</div>
+        </div>
+
+
+        <div class="chartfield" id="field4">
+            <div class="chart" chartType="none" id="chart4">
+
+            </div>
+            <div locked="false" class="tooltip" id="field4_tooltip">
+            </div>
+            <div class="tooltipButton" onmouseenter="loadTooltip(this)" onmouseleave="unloadTooltip(this)"
+                onmousedown="handleLock(this)">
+                ?
+            </div>
+            <div class="initButton" onmousedown="loadChart(this.parentElement)">+</div>
+        </div>
+
+        <div class="chartfield" id="field5">
+            <div class="chart" chartType="none" id="chart5">
+
+            </div>
+            <div locked="false" class="tooltip" id="field5_tooltip">
+            </div>
+            <div class="tooltipButton" onmouseenter="loadTooltip(this)" onmouseleave="unloadTooltip(this)"
+                onmousedown="handleLock(this)">
+                ?
+            </div>
+            <div class="initButton" onmousedown="loadChart(this.parentElement)">+</div>
+        </div>
+
+
+        <div class="chartfield" id="field6">
+            <div class="chart" chartType="none" id="chart6">
+
+            </div>
+            <div locked="false" class="tooltip" id="field6_tooltip">
+
+            </div>
+            <div class="tooltipButton" onmouseenter="loadTooltip(this)" onmouseleave="unloadTooltip(this)"
+                onmousedown="handleLock(this)">
+                ?
+            </div>
+            <div class="initButton" onmousedown="loadChart(this.parentElement)">+</div>
+        </div>
+
+    </div>
+
+
+
 </body>
+
+
+
+<script>
+
+    var country = 'none';
+    var loadedCharts = '';
+    const tooltipTexts = {
+        'none': 'This window provides explanations for charts. Press the Plus button to load a chart. Click on the question mark to lock this field in place.'
+    }
+
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+
+    async function loadTooltip(button) {
+        const tooltip = button.parentElement.querySelector('.tooltip');
+        if (tooltip.getAttribute('locked') === "true") return;
+        tooltip.innerHTML += tooltipTexts[button.parentElement.querySelector('.chart').getAttribute('chartType')];
+        tooltip.style.transition = "top 0.5s";
+        tooltip.style.top = "30%";
+    }
+
+    async function unloadTooltip(button) {
+        const tooltip = button.parentElement.querySelector('.tooltip');
+        if (tooltip.getAttribute('locked') === "true") return;
+        tooltip.style.transition = "top 0.2s";
+        tooltip.style.top = "100%";
+        await delay(200)
+        tooltip.innerHTML = '';
+
+    }
+    async function handleLock(button) {
+        const tooltip = button.parentElement.querySelector('.tooltip');
+        console.log('lock')
+        if (tooltip.getAttribute('locked') === "true") {
+            console.log('what')
+            tooltip.setAttribute('locked', 'false');
+            button.style.border = '2px dashed black'
+            return;
+        }
+
+        if (tooltip.getAttribute('locked') === "false") {
+            tooltip.setAttribute('locked', 'true');
+            button.style.border = '2px solid black'
+        }
+    }
+
+    async function requestNewDataset() {
+        try {
+            const response = await fetch('/getNewDataset?c=' + country);
+            if (!response.ok) throw new Error('Network response was not ok');
+            return await response.json();
+        } catch (error) {
+            console.error('Failed to fetch country:', error);
+            return null;
+        }
+    }
+
+    async function requestRandomCountry(region) {
+        try {
+            const response = await fetch('/getRandomCountry?region=' + region);
+            if (!response.ok) throw new Error('Network response was not ok');
+            return await response.text
+        } catch (error) {
+            console.error('Failed to fetch country:', error);
+            return null;
+        }
+    }
+
+
+    async function loadWordcloud(field){
+
+    }
+
+    
+    async function loadPopulationPyramid(field){
+        
+    }
+
+    
+    async function loadGdpPerEnergy(field){
+        
+    }
+
+    
+    async function loadForestArea(field){
+        
+    }
+
+    
+    async function loadGdpComposition(field){
+        
+    }
+
+    
+    async function loadDietaryComposition(field){
+        
+    }
+
+    
+    async function loadSportsData(field){
+        
+    }
+
+    
+    async function loadTopographicCrossection(field){
+        
+    }
+
+    async function loadChart(button) {
+        const chartData = await requestNewDataset();
+        const field = button.parentElement.querySelector('chart');
+        const chartType = chartData()
+        field.setAttribute('chartType', chartType);
+
+        switch(chartType){
+            case 'wordcloud':
+                loadWordcloud(field);
+                break;
+            case 'gdpcomp':
+                loadGdpComposition(field);
+                break;
+            case 'sports':
+                loadSportsData(field);
+                break;
+            case 'forest':
+                loadForestArea(field);
+                break;
+            case 'diet':
+                loadDietaryComposition(field);
+                break;
+            case 'gdpperenergy':
+                loadDietaryComposition(field);
+                break;
+            case 'pyramid':
+                loadPopulationPyramid(field);
+                break;
+            case 'crossection':
+                loadTopographicCrossection(field);
+                break;
+        }
+        return;
+    }
+
+
+    async function main() {
+        var country = await requestRandomCountry('europe');
+
+
+
+    }
+
+</script>
+
 </html>
