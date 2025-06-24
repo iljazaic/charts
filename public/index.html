@@ -59,6 +59,13 @@
         padding-top: 10px;
     }
 
+    .chart {
+        position: absolute;
+        z-index: 0;
+        width: 100%;
+        height: 100%;
+    }
+
     .tooltipButton {
         border-radius: 40px;
         border: dashed 2px black;
@@ -84,6 +91,7 @@
         text-align: center;
         font-size: 40px;
         font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        z-index: 1000;
 
         left: calc(50% - 25px);
         top: calc(50% - 25px);
@@ -242,6 +250,7 @@
     }
 
     async function requestNewDataset() {
+        return 'wordcloud';
         try {
             const response = await fetch('/getNewDataset?c=' + country);
             if (!response.ok) throw new Error('Network response was not ok');
@@ -263,76 +272,160 @@
         }
     }
 
+//image based loadings
+    async function loadWordcloud(field) {
+        const imageUrl = data;
 
-    async function loadWordcloud(field){
 
     }
 
-    
-    async function loadPopulationPyramid(field){
-        
+
+    async function loadPopulationPyramid(field) {
+        const imageURL = data;
+
     }
 
-    
-    async function loadGdpPerEnergy(field){
-        
+//basic echart loading
+    async function loadGdpPerEnergy(field, data) {
+        field.parentElement.querySelector('.initButton').style.visibility = 'hidden';
+        var chart = echarts.init(field);
+
+        var option = {
+            title: {
+                text: 'GDP per unit energy consumed, (2021USD/1L oil)'
+            },
+            tooltip: {},
+            legend: {
+                data: ['USD/L']
+            },
+            xAxis: {
+                data: data.years
+            },
+            yAxis: {},
+            series: [
+                {
+                    name: 'gdp/energy',
+                    type: 'line',
+                    data: data.values
+                }
+            ]
+        };
+        chart.setOption(option);
     }
 
-    
-    async function loadForestArea(field){
-        
+
+    async function loadForestArea(field, data) {
+        field.parentElement.querySelector('.initButton').style.visibility = 'hidden';
+        var chart = echarts.init(field);
+
+        var option = {
+            title: {
+                text: 'Country Forest Area, %'
+            },
+            tooltip: {},
+            legend: {
+                data: ['%']
+            },
+            xAxis: {
+                data: data.years
+            },
+            yAxis: {},
+            series: [
+                {
+                    name: 'area',
+                    type: 'line',
+                    data: data.values
+                }
+            ]
+        };
+        chart.setOption(option);
     }
 
-    
-    async function loadGdpComposition(field){
-        
+
+    async function loadGdpComposition(field, data) {
+        field.parentElement.querySelector('.initButton').style.visibility = 'hidden';
+        var chart = echarts.init(field);
+        var option = {
+            series: [
+                {
+                    type: 'pie',
+                    data: data.values
+                }
+            ]
+        };
+        chart.setOption(option);
     }
 
-    
-    async function loadDietaryComposition(field){
-        
+    async function loadTopographicCrossection(field, data) {
+        field.parentElement.querySelector('.initButton').style.visibility = 'hidden';
+        var chart = echarts.init(field);
+
+        var option = {
+            title: {
+                text: 'Country topographic crossection'
+            },
+            tooltip: {},
+            legend: {
+                data: ['%']
+            },
+            xAxis: {
+                data: data.distances
+            },
+            yAxis: {},
+            series: [
+                {
+                    name: 'elevation',
+                    type: 'line',
+                    data: data.values
+                }
+            ]
+        };
+        chart.setOption(option);
     }
 
-    
-    async function loadSportsData(field){
-        
+//fancy echarts loading
+    async function loadDietaryComposition(field) {
+
     }
 
-    
-    async function loadTopographicCrossection(field){
-        
+
+    async function loadSportsData(field) {
+
     }
 
-    async function loadChart(button) {
+
+
+    async function loadChart(field) {
         const chartData = await requestNewDataset();
-        const field = button.parentElement.querySelector('chart');
-        const chartType = chartData()
+        field = field.querySelector('.chart');
+        const chartType = chartData.chartType;
+        const data = chartData.data;
         field.setAttribute('chartType', chartType);
 
-        switch(chartType){
+        switch (chartType) {
             case 'wordcloud':
-                loadWordcloud(field);
+                loadWordcloud(field, data);
                 break;
             case 'gdpcomp':
-                loadGdpComposition(field);
+                loadGdpComposition(field, data);
                 break;
             case 'sports':
-                loadSportsData(field);
+                loadSportsData(field, data);
                 break;
             case 'forest':
-                loadForestArea(field);
+                loadForestArea(field, data);
                 break;
             case 'diet':
-                loadDietaryComposition(field);
+                loadDietaryComposition(field, data);
                 break;
             case 'gdpperenergy':
-                loadDietaryComposition(field);
+                loadDietaryComposition(field, data);
                 break;
             case 'pyramid':
-                loadPopulationPyramid(field);
+                loadPopulationPyramid(field, data);
                 break;
             case 'crossection':
-                loadTopographicCrossection(field);
+                loadTopographicCrossection(field, data);
                 break;
         }
         return;
