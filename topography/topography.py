@@ -9,9 +9,10 @@ def createCrossection():
 
             lat = float(line.split(',')[2])
             lon = float(line.split(',')[3])
-            step = 0.01
+            step = 0.005
             
-            
+            lon_init = lon
+
             stepInKm = step * 111.32*math.cos(math.radians(lat))
             initialCountry = requests.get('http://localhost:5000/countryAtCoord', params={'lat':lat,'lon':lon}).json()['country']
             currentCountry = initialCountry
@@ -24,6 +25,7 @@ def createCrossection():
                 eastData.append(elevation)
             currentCountry = initialCountry
             westData = []
+            lon = lon_init
             while(currentCountry==initialCountry):
                 currentCountry = requests.get('http://localhost:5000/countryAtCoord', params={'lat':lat,'lon':lon}).json()['country']
                 lon-=step
