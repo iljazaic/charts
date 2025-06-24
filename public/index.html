@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-    <script src="./echarts/echarts.js"></script>
     <title>redacted</title>
 </head>
 
@@ -109,7 +108,7 @@
 
 <body>
 
-
+    <script src="/echarts/echarts.js"></script>
     <div class="topfield">
 
     </div>
@@ -208,7 +207,7 @@
 
 <script>
 
-    var country = 'none';
+    var country = 'Denmark';
     var loadedCharts = '';
     const tooltipTexts = {
         'none': 'This window provides explanations for charts. Press the Plus button to load a chart. Click on the question mark to lock this field in place.'
@@ -250,7 +249,6 @@
     }
 
     async function requestNewDataset() {
-        return 'wordcloud';
         try {
             const response = await fetch('/getNewDataset?c=' + country);
             if (!response.ok) throw new Error('Network response was not ok');
@@ -272,7 +270,7 @@
         }
     }
 
-//image based loadings
+    //image based loadings
     async function loadWordcloud(field) {
         const imageUrl = data;
 
@@ -285,7 +283,7 @@
 
     }
 
-//basic echart loading
+    //basic echart loading
     async function loadGdpPerEnergy(field, data) {
         field.parentElement.querySelector('.initButton').style.visibility = 'hidden';
         var chart = echarts.init(field);
@@ -359,38 +357,38 @@
     async function loadTopographicCrossection(field, data) {
         field.parentElement.querySelector('.initButton').style.visibility = 'hidden';
         var chart = echarts.init(field);
-
+        console.log(data)
         var option = {
             title: {
-                text: 'Country topographic crossection'
+                text: 'Basic Line Chart'
             },
-            tooltip: {},
-            legend: {
-                data: ['m']
+            tooltip: {
+                trigger: 'axis'
             },
             xAxis: {
-                data: data.distances
+                type: 'category',
+                data: data.Distances
             },
-            yAxis: {},
-            series: [
-                {
-                    name: 'elevation',
-                    type: 'line',
-                    data: data.values
-                }
-            ]
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                name: 'Sales',
+                type: 'line',
+                data: data.Elevations
+            }]
         };
         chart.setOption(option);
     }
 
-//fancy echarts loading
+    //fancy echarts loading
     async function loadDietaryComposition(field) {
 
     }
 
 
     async function loadSportsData(field) {
-        
+
     }
 
 
