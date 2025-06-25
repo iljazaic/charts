@@ -207,7 +207,7 @@
 
 <script>
 
-    var country = 'Denmark';
+    var country = 'Belize';
     var loadedCharts = '';
     const tooltipTexts = {
         'none': 'This window provides explanations for charts. Press the Plus button to load a chart. Click on the question mark to lock this field in place.'
@@ -382,7 +382,36 @@
     }
 
     //fancy echarts loading
-    async function loadDietaryComposition(field) {
+    async function loadDietaryComposition(field, data) {
+        console.log(data)
+        field.parentElement.querySelector('.initButton').style.visibility = 'hidden';
+        var chart = echarts.init(field);
+
+        const option = {
+            title: {
+                text: 'Food Category Consumption',
+                left: 'center'
+            },
+            tooltip: {
+                formatter: info => `${info.name}: ${info.value.toFixed(2)}`
+            },
+            series: [{
+                type: 'treemap',
+                data: data,
+                label: {
+                    show: true,
+                    formatter: '{b}',
+                    fontSize: 12
+                },
+                upperLabel: {
+                    show: true
+                },
+                breadcrumb: {
+                    show: false
+                }
+            }]
+        };
+        chart.setOption(option);
 
     }
 
