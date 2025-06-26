@@ -49,7 +49,7 @@ async function compileDietData(country) {
         if (country == countryLine || country.toLowerCase() == countryLine.toLowerCase() || countryLine.toLowerCase().includes(country.toLowerCase())) {
             const dietData = lines[i].split(',');
             for (let j = 2; j < dietData.length; j++) {
-                package.push({ name: valueArray[j], value: parseFloat(dietData[j]) })
+                package.push({ name: valueArray[j]+': '+dietData[j]+'kCal', value: parseFloat(dietData[j]), itemStyle:{color:{image:'./images/diet/'+valueArray[j]+'.png', repeat:'repeat'}} })
             }
             return package;
         }
@@ -58,7 +58,7 @@ async function compileDietData(country) {
 }
 
 async function getNewDataset(country) {
-    return 'crossection'
+    return 'diet'
 }
 
 

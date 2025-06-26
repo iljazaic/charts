@@ -1,0 +1,4 @@
+Kiribati,Tarawa,1.3272,172.9813,64011,Capital
+Marshall Islands,Majuro,7.0897,171.3803,30661,Capital
+New Zealand,Wellington,-41.2866,174.7756,411346,Capital
+Russian Federation,Moskva (Moscow),55.7550,37.6218,12409738,Capital

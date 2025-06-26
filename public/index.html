@@ -207,7 +207,7 @@
 
 <script>
 
-    var country = 'Belize';
+    var country = 'Spain';
     var loadedCharts = '';
     const tooltipTexts = {
         'none': 'This window provides explanations for charts. Press the Plus button to load a chart. Click on the question mark to lock this field in place.'
@@ -360,24 +360,56 @@
         console.log(data)
         var option = {
             title: {
-                text: 'Basic Line Chart'
+                text: 'Topographic Cross-Section along Capital City Longitude'
             },
             tooltip: {
                 trigger: 'axis'
             },
             xAxis: {
                 type: 'category',
+                boundaryGap: false,
                 data: data.Distances
             },
             yAxis: {
-                type: 'value'
+                type: 'value',
+                axisLabel: {
+                    formatter: '{value} m'
+                }
             },
-            series: [{
-                name: 'Sales',
-                type: 'line',
-                data: data.Elevations
-            }]
+            series: [
+                {
+                    name: 'Elevation',
+                    type: 'line',
+                    smooth: true,
+                    symbol: 'none',
+                    lineStyle: {
+                        color: '#5A7D7C',
+                        width: 2
+                    },
+                    areaStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0,
+                            y: 0,
+                            x2: 0,
+                            y2: 1,
+                            colorStops: [
+                                {
+                                    offset: 0, color: '#8FBABA' // top color
+                                },
+                                {
+                                    offset: 1, color: '#E0ECEC' // bottom color
+                                }
+                            ]
+                        },
+                        shadowColor: 'rgba(0, 0, 0, 0.2)',
+                        shadowBlur: 10
+                    },
+                    data: data.Elevations
+                }
+            ]
         };
+
         chart.setOption(option);
     }
 
@@ -399,12 +431,17 @@
                 type: 'treemap',
                 data: data,
                 label: {
-                    show: true,
-                    formatter: '{b}',
-                    fontSize: 12
+                fontSize: 12,
+                textBorderColor: '#000',
+                textBorderWidth: 2,
+                color: '#fff',
+                textShadowBlur: 5,
+                textShadowColor: '#000',
+                textShadowOffsetX: 3,
+                textShadowOffsetY: 3,
                 },
                 upperLabel: {
-                    show: true
+                    show: false
                 },
                 breadcrumb: {
                     show: false
